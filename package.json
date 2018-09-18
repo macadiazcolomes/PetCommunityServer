@@ -2,7 +2,7 @@
   "name": "petcommunityserver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,19 @@
   "bugs": {
     "url": "https://github.com/macadiazcolomes/PetCommunityServer/issues"
   },
-  "homepage": "https://github.com/macadiazcolomes/PetCommunityServer#readme"
+  "homepage": "https://github.com/macadiazcolomes/PetCommunityServer#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.10",
+    "mongodb": "^2.2.36",
+    "morgan": "^1.9.0",
+    "nodemailer": "^4.6.8"
+  }
 }
