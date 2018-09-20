@@ -5,7 +5,7 @@ var logger = require('morgan'),
   dotenv = require('dotenv'),
   errorhandler = require('errorhandler'),
   bodyParser = require('body-parser'),
-  mongoDB = require('./mongoUtil');
+  mongoDB = require('./services/mongoUtil');
 
 var app = express();
 
@@ -29,7 +29,12 @@ mongoDB.connectDB(err => {
   } else {
     console.log('- connection opened');
 
-    app.use(require('./user-routes'));
+    app.use(require('./routes/user-routes'));
+    app.use(require('./routes/pets-routes'));
+    app.use(require('./routes/alerts-routes'));
+    app.use(require('./routes/services-routes'));
+    app.use(require('./routes/sos-routes'));
+    app.use(require('./routes/messages-routes'));
   }
 });
 
