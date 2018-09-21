@@ -27,7 +27,7 @@ function validateIds(userId, sosId, callback) {
       //check if user is creator or helper
       if (
         !user._id.equals(sos.userID_creator) &&
-        !sos.helpers.includes(user._id)
+        sos.helpers.indexOf(userId) > -1
       ) {
         error = { status: 404, send: 'User is not paticipating in this SOS' };
         return callback(error, usr, usrSos);
