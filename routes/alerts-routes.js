@@ -80,7 +80,13 @@ app.post('/pca/protected/users/:userId/pets/:petId/alerts', function(req, res) {
         return res.status(err.status).send(err.send);
       }
       //update pet alerts field
-      var action = { $push: { alerts: result.insertedId } };
+      var query = {};
+      query['alerts_qtys.' + alert.type] = 1;
+
+      var action = {
+        $push: { alerts: result.insertedId },
+        $inc: query,
+      };
       utilities.general.genericUpdate('pets', petId, action, (err, doc) => {
         if (err) {
           return res.status(err.status).send(err.send);
@@ -266,19 +272,29 @@ app.delete('/pca/protected/users/:userId/pets/:petId/alerts/:alertId', function(
     if (err) {
       return res.status(err.status).send(err.send);
     }
-    utilities.general.genericDelete('alerts', alertId, (err, result) => {
+    utilities.general.genericGetById('alerts', alertId, (err, alert) => {
       if (err) {
         return res.status(err.status).send(err.send);
       }
-      //update pet alerts
-      var action = {
-        $pull: { alerts: { $in: [ObjectID.createFromHexString(alertId)] } },
-      };
-      utilities.general.genericUpdate('pets', petId, action, (err, doc) => {
+      utilities.general.genericDelete('alerts', alertId, (err, result) => {
         if (err) {
           return res.status(err.status).send(err.send);
         }
-        return res.sendStatus(204);
+        //update pet alerts
+        var query = {};
+        query['alerts_qtys.' + alert.type] = -1;
+        var action = {
+          $pull: {
+            alerts: ObjectID.createFromHexString(alertId),
+          },
+          $inc: query,
+        };
+        utilities.general.genericUpdate('pets', petId, action, (err, doc) => {
+          if (err) {
+            return res.status(err.status).send(err.send);
+          }
+          return res.sendStatus(204);
+        });
       });
     });
   });

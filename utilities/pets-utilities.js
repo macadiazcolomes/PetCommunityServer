@@ -12,9 +12,12 @@ var petObjectFactory = function(action, data) {
   if (action === 'GET' || action === 'UPDATE') {
     pet.id = data._id.toHexString();
   }
-  if ((action = 'GET')) {
+  if (action === 'GET') {
     if (data.alerts) pet.alerts = data.alerts;
+    if (data.alerts_qtys) pet.alerts_qtys = data.alerts_qtys;
   }
+
+  if (data.avatar) pet.avatar = data.avatar;
   if (data.breed) pet.breed = data.breed;
   if (data.gender) pet.gender = data.gender;
   if (data.birthday) pet.birthday = data.birthday;
