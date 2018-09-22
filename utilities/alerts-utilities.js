@@ -17,6 +17,7 @@ var alertObjectFactory = function(action, data) {
   if (data.notes) alert.notes = data.notes;
   if (data.reminder) alert.reminder = data.reminder;
   if (data.reminder_time) alert.reminder_time = data.reminder_time;
+  if (data.reminder_id) alert.reminder_id = data.reminder_id;
 
   return alert;
 };
