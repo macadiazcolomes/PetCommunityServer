@@ -41,5 +41,26 @@ mongoDB.connectDB(err => {
 var port = process.env.PORT || 3001;
 
 app.listen(port, function(err) {
+  if (err) {
+    console.log(err);
+  }
   console.log('listening in http://localhost:' + port);
+});
+
+//Socket.io Setup
+var io = require('socket.io')(3002);
+io.on('connection', socket => {
+  console.log('socket io connection..');
+  socket.on('join:room', function(data) {
+    console.log('joining room ', data);
+    socket.join(data);
+  });
+  socket.on('disconnect', function(data) {
+    console.log('disconnecting ...');
+  });
+  socket.on('message', function(data) {
+    //data is the message object
+    console.log('sending Message', data);
+    io.to(data.sosId).emit('message', data);
+  });
 });

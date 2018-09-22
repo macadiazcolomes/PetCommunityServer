@@ -28,6 +28,7 @@
     "lodash": "^4.17.10",
     "mongodb": "^2.2.36",
     "morgan": "^1.9.0",
-    "nodemailer": "^4.6.8"
+    "nodemailer": "^4.6.8",
+    "socket.io": "^2.1.1"
   }
 }
