@@ -14,7 +14,7 @@ var app = (module.exports = express.Router());
 // Create a new JWT Token
 function createToken(user) {
   return jwt.sign(_.omit(user, 'password'), config.secret, {
-    expiresIn: 60 * 60 * 5,
+    expiresIn: '7d',
   });
 }
 

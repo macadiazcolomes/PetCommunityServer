@@ -4,6 +4,11 @@ var express = require('express'),
   utilities = require('../utilities');
 
 const server_response = require('../services/response_formats');
+
+//for push notifications
+const https = require('https');
+var onesignal_key = process.env.ONE_SIGNAL_APP_ID;
+
 var app = (module.exports = express.Router());
 
 //PROTECTED ROUTES
@@ -78,6 +83,70 @@ app.post('/pca/protected/users/:userId/sos', function(req, res) {
       }
       sos.id = result.insertedId.toHexString();
       delete sos._id;
+
+      //send push notifification to all users of the same city and
+      //country with sos_susbsciption active
+      var query = {
+        city: user.city,
+        country: user.country,
+        sos_subscription: user.sos_subscription,
+      };
+      utilities.general.genericMultipleFind('users', query, (err, list) => {
+        if (err) {
+          return res.status(err.status).send(err.send);
+        }
+        var ids = list.map(data => {
+          return data.push_notification_ids;
+        });
+        ids = [].concat.apply([], ids).filter(id => id !== undefined);
+
+        console.log('ids to send push notifications', ids);
+        var data = {
+          app_id: onesignal_key,
+          include_player_ids: ids,
+          headings: {
+            en: 'Pet Community SOS Alert',
+            es: 'Alerta SOS en Pet Community',
+          },
+          contents: {
+            en: 'SOS: ' + sos.short_description + '\nNeed: ' + sos.need,
+            es: 'SOS: ' + sos.short_description + '\nNecesidad: ' + sos.need,
+          },
+          data: {
+            action: 'open',
+            page: 'SosDetailPage',
+            params: { mode: 'view', sos: sos },
+          },
+        };
+
+        var postData = JSON.stringify(data);
+        // console.log(postData);
+        var options = {
+          host: 'onesignal.com',
+          path: '/api/v1/notifications',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(postData),
+          },
+        };
+
+        var push_post = https.request(options, function(res) {
+          // console.log('STATUS: ' + res.statusCode);
+          //console.log('HEADERS: ' + res.headers);
+          //console.log('BODY', res.body);
+          res.setEncoding('utf8');
+          res.on('data', function(chunk) {
+            console.log('BODY: ' + chunk);
+          });
+        });
+        push_post.on('error', function(err) {
+          console.log('problem with request: ' + err.message);
+        });
+        push_post.write(postData);
+        push_post.end();
+      });
+
       return res.send(sos);
     });
   });

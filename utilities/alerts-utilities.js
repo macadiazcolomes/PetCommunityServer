@@ -3,7 +3,6 @@
 /*************************/
 /*action = 'CREATE', 'GET', 'UPDATE'*/
 var alertObjectFactory = function(action, data) {
-  console.log('[alerts-utilities] alertObjectFactory');
   var alert = {
     type: data.type,
     name: data.name,
@@ -18,6 +17,8 @@ var alertObjectFactory = function(action, data) {
   if (data.reminder) alert.reminder = data.reminder;
   if (data.reminder_time) alert.reminder_time = data.reminder_time;
   if (data.reminder_id) alert.reminder_id = data.reminder_id;
+  if (data.push_notification_id)
+    alert.push_notification_id = data.push_notification_id;
 
   return alert;
 };

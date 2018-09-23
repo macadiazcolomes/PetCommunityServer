@@ -18,6 +18,11 @@ var userObjectFactory = function(action, data) {
     if (data.country) user.country = data.country;
     if (data.avatar) user.avatar = data.avatar;
     if (data.social_media) user.social_media = data.social_media;
+    if (data.push_notification_ids) {
+      user.push_notification_ids = data.push_notification_ids;
+    } else {
+      user.push_notification_ids = [];
+    }
   }
   if (action === 'GET') {
     if (data.pets) user.pets = data.pets;
